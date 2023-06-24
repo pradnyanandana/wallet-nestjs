@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityManager } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './user.dto';
-import { Wallet } from '../wallet/wallet.entity';
 import { createHash } from 'crypto';
 import { hashPassword } from '../auth/auth.util';
+import { Wallet } from '../wallet/wallet.entity';
 
 @Injectable()
 export class UserService {
@@ -51,6 +51,7 @@ export class UserService {
     user.email = email;
     user.username = username;
     user.password = await hashPassword(password);
+    user.registrationDate = new Date();
 
     const data = `${user.username}:${user.email}`;
     const address = createHash('sha256').update(data).digest('hex');

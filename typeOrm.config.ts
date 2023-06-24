@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
-import { User } from 'src/api/user/user.entity';
-import { Auth } from 'src/api/auth/auth.entity';
-import { Wallet } from 'src/api/wallet/wallet.entity';
+import { User } from './src/user/user.entity';
+import { Auth } from './src/auth/auth.entity';
+import { Wallet } from './src/wallet/wallet.entity';
 
 config();
 

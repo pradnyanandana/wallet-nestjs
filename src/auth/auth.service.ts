@@ -1,5 +1,4 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Auth } from './auth.entity';

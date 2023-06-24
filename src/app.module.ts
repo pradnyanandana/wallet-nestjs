@@ -4,12 +4,12 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { Auth } from './api/auth/auth.entity';
-import { AuthModule } from './api/auth/auth.module';
-import { User } from './api/user/user.entity';
-import { UserModule } from './api/user/user.module';
-import { WalletModule } from './api/wallet/wallet.module';
-import { Wallet } from './api/wallet/wallet.entity';
+import { Auth } from './auth/auth.entity';
+import { AuthModule } from './auth/auth.module';
+import { User } from './user/user.entity';
+import { Wallet } from './wallet/wallet.entity';
+import { UserModule } from './user/user.module';
+import { WalletModule } from './wallet/wallet.module';
 
 @Module({
   imports: [

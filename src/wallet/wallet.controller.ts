@@ -7,7 +7,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { WalletService } from './wallet.service';
-import { JwtAuthGuard } from '../../middleware/jwt-guard';
+import { JwtAuthGuard } from '../auth/auth.jwt-guard';
 
 @Controller('wallet')
 export class WalletController {

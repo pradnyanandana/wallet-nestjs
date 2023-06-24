@@ -20,7 +20,7 @@ export class UserController {
       return {
         firstName: user.firstName,
         lastName: user.lastName,
-        dateOfBirth: user.dateOfBirth,
+        dateOfBirth: user.dateOfBirth.toISOString(),
         streetAddress: user.streetAddress,
         city: user.city,
         province: user.province,
@@ -30,10 +30,7 @@ export class UserController {
         registrationDate: user.registrationDate.toISOString(),
       };
     } catch (error) {
-      throw new HttpException(
-        'Registration failed',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
