@@ -13,11 +13,23 @@ import { WalletService } from './wallet.service';
 import { JwtAuthGuard } from '../auth/auth.jwt-guard';
 import { WalletDto } from './wallet.dto';
 import { Response } from 'express';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiInternalServerErrorResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('wallet')
 @Controller('wallet')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
+  @ApiOperation({ summary: 'Get wallet balance' })
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Successfully retrieved wallet balance' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Get('/balance')
   @UseGuards(JwtAuthGuard)
   async getWalletBalance(@Request() req: any, @Res() res: Response) {
@@ -35,6 +47,10 @@ export class WalletController {
     }
   }
 
+  @ApiOperation({ summary: 'Top up wallet' })
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Successfully topped up wallet' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Post('/top-up')
   @UseGuards(JwtAuthGuard)
   async topUpWallet(
@@ -59,6 +75,10 @@ export class WalletController {
     }
   }
 
+  @ApiOperation({ summary: 'Pay with wallet' })
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Successfully made payment with wallet' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Post('/pay')
   @UseGuards(JwtAuthGuard)
   async payWithWallet(

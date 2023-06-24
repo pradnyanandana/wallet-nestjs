@@ -6,7 +6,7 @@ import {
   IsEnum,
   Length,
 } from 'class-validator';
-
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
 export enum Province {
@@ -47,38 +47,68 @@ export enum Province {
 }
 
 export class CreateUserDto {
+  @ApiProperty({
+    example: 'John',
+    description: 'First name',
+    minLength: 2,
+    maxLength: 20,
+  })
   @IsString()
   @Length(2, 20)
   firstName: string;
 
+  @ApiProperty({
+    example: 'Doe',
+    description: 'Last name',
+    minLength: 2,
+    maxLength: 20,
+  })
   @IsString()
   @Length(2, 20)
   lastName: string;
 
+  @ApiProperty({ example: '1990-01-01', description: 'Date of birth' })
   @IsDate()
   @Type(() => Date)
   dateOfBirth: Date;
 
+  @ApiProperty({
+    example: '123 Street',
+    description: 'Street address',
+    minLength: 5,
+    maxLength: 40,
+  })
   @IsString()
   @Length(5, 40)
   streetAddress: string;
 
+  @ApiProperty({
+    example: 'City',
+    description: 'City',
+    minLength: 2,
+    maxLength: 20,
+  })
   @IsString()
   @Length(2, 20)
   city: string;
 
+  @ApiProperty({ example: Province.Jakarta, description: 'Province' })
   @IsEnum(Province)
   province: Province;
 
+  @ApiProperty({ example: '1234567890', description: 'Telephone number' })
   @IsString()
   telephoneNumber: string;
 
+  @ApiProperty({ example: 'john@example.com', description: 'Email address' })
   @IsEmail()
   email: string;
 
+  @ApiProperty({ example: 'john123', description: 'Username' })
   @IsAlphanumeric()
   username: string;
 
+  @ApiProperty({ example: 'password', description: 'Password' })
   @IsString()
   password: string;
 }

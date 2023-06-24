@@ -3,18 +3,27 @@ import {
   Post,
   Body,
   ValidationPipe,
-  HttpException,
   HttpStatus,
   Res,
 } from '@nestjs/common';
 import { CreateUserDto } from './user.dto';
 import { UserService } from './user.service';
 import { Response } from 'express';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiCreatedResponse({ description: 'Successfully created user' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Post()
   async createUser(
     @Body(new ValidationPipe()) createUserDto: CreateUserDto,
