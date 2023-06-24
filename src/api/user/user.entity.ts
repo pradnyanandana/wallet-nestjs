@@ -40,9 +40,6 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
-  token: string;
-
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',

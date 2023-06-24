@@ -48,7 +48,6 @@ describe('WalletService', () => {
         username: 'johndoe',
         password: 'pass123',
         registrationDate: new Date('1990-01-01'),
-        token: 'token123',
       };
 
       const wallet: Wallet = {
@@ -86,7 +85,6 @@ describe('WalletService', () => {
         username: 'johndoe',
         password: 'pass123',
         registrationDate: new Date('1990-01-01'),
-        token: 'token123',
       };
 
       const wallet: Wallet = {
@@ -126,7 +124,6 @@ describe('WalletService', () => {
         username: 'johndoe',
         password: 'pass123',
         registrationDate: new Date('1990-01-01'),
-        token: 'token123',
       };
 
       const wallet: Wallet = {
@@ -165,7 +162,6 @@ describe('WalletService', () => {
         username: 'johndoe',
         password: 'pass123',
         registrationDate: new Date('1990-01-01'),
-        token: 'token123',
       };
 
       const wallet: Wallet = {

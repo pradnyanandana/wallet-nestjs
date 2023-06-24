@@ -53,7 +53,6 @@ describe('UserService', () => {
       email: 'existing@example.com',
       username: 'existinguser',
       password: 'existingpassword',
-      token: 'existingtoken',
       registrationDate: new Date(),
     };
 
