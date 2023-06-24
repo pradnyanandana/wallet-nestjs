@@ -5,19 +5,24 @@ import {
   ValidationPipe,
   HttpException,
   HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { CreateUserDto } from './user.dto';
 import { UserService } from './user.service';
+import { Response } from 'express';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+  async createUser(
+    @Body(new ValidationPipe()) createUserDto: CreateUserDto,
+    @Res() res: Response,
+  ) {
     try {
       const user = await this.userService.createUser(createUserDto);
-      return {
+      const data = {
         firstName: user.firstName,
         lastName: user.lastName,
         dateOfBirth: user.dateOfBirth,
@@ -29,8 +34,15 @@ export class UserController {
         username: user.username,
         registrationDate: user.registrationDate.toISOString(),
       };
+
+      res.status(HttpStatus.OK).json({
+        message: 'Success create user',
+        data,
+      });
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ message: error.message });
     }
   }
 }
