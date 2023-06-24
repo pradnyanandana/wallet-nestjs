@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './user.dto';
-import { AuthService } from 'src/api/auth/auth.service';
-import { WalletService } from 'src/api/wallet/wallet.service';
+import { Wallet } from '../wallet/wallet.entity';
+import { createHash } from 'crypto';
+import { hashPassword } from '../auth/auth.util';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly authService: AuthService,
-    private readonly walletService: WalletService,
+
+    private readonly entityManager: EntityManager,
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
@@ -38,7 +39,6 @@ export class UserService {
       throw new Error('Username is already taken');
     }
 
-    // Create a new User entity
     const user = new User();
 
     user.firstName = firstName;
@@ -50,30 +50,27 @@ export class UserService {
     user.telephoneNumber = telephoneNumber;
     user.email = email;
     user.username = username;
-    user.password = await this.authService.hashPassword(password);
+    user.password = await hashPassword(password);
+
+    const data = `${user.username}:${user.email}`;
+    const address = createHash('sha256').update(data).digest('hex');
+
+    const wallet = new Wallet();
+
+    wallet.user = user;
+    wallet.balance = 0;
+    wallet.address = address;
 
     try {
-      await this.userRepository.save(user);
+      // Save user and wallet within the transaction
+      await this.entityManager.transaction(async (transactionManager) => {
+        await transactionManager.save(user);
+        await transactionManager.save(wallet);
+      });
     } catch (error) {
       throw new Error('Failed to save user to the database');
     }
 
-    await this.walletService.createWallet(user);
-
     return user;
-  }
-
-  async findById(userId: number): Promise<User | undefined> {
-    return await this.userRepository.findOne({
-      where: { id: userId },
-    });
-  }
-
-  async findByEmailOrUsername(
-    emailOrUsername: string,
-  ): Promise<User | undefined> {
-    return await this.userRepository.findOne({
-      where: [{ email: emailOrUsername }, { username: emailOrUsername }],
-    });
   }
 }

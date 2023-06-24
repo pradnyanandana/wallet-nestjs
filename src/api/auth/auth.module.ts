@@ -6,10 +6,11 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from '../../middleware/jwt-strategy';
 import { PassportModule } from '@nestjs/passport';
 import { Auth } from './auth.entity';
+import { User } from '../user/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Auth]),
+    TypeOrmModule.forFeature([Auth, User]),
     JwtModule.register({}),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],

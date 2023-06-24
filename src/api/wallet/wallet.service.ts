@@ -1,38 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from '../user/user.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Wallet } from './wallet.entity';
-import { User } from 'src/api/user/user.entity';
-import { createHash } from 'crypto';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class WalletService {
   constructor(
     @InjectRepository(Wallet)
-    private readonly userService: UserService,
     private readonly walletRepository: Repository<Wallet>,
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
-  async createWallet(user: User): Promise<Wallet> {
-    const data = `${user.username}:${user.email}`;
-    const address = createHash('sha256').update(data).digest('hex');
-
-    const wallet = new Wallet();
-
-    wallet.user = user;
-    wallet.balance = 0;
-    wallet.address = address;
-
-    try {
-      return await this.walletRepository.save(wallet);
-    } catch (error) {
-      throw new Error('Failed to save wallet to the database');
-    }
-  }
-
   async getWalletBalance(userId: number): Promise<number> {
-    const user = await this.userService.findById(userId);
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
     const wallet = await this.walletRepository.findOne({
       where: { user },
     });
@@ -41,7 +27,10 @@ export class WalletService {
   }
 
   async topUpWallet(userId: number, amount: number): Promise<number> {
-    const user = await this.userService.findById(userId);
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
     const wallet = await this.walletRepository.findOne({
       where: { user },
     });
@@ -54,7 +43,10 @@ export class WalletService {
   }
 
   async payWithWallet(userId: number, amount: number): Promise<number> {
-    const user = await this.userService.findById(userId);
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
     const wallet = await this.walletRepository.findOne({
       where: { user },
     });

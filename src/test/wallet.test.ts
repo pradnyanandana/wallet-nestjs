@@ -11,6 +11,7 @@ describe('WalletService', () => {
   let walletService: WalletService;
   let userService: UserService;
   let walletRepository: Repository<Wallet>;
+  let userRepository: Repository<User>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,36 +30,6 @@ describe('WalletService', () => {
     walletRepository = module.get<Repository<Wallet>>(
       getRepositoryToken(Wallet),
     );
-  });
-
-  describe('createWallet', () => {
-    it('should create a wallet for a user', async () => {
-      const user: User = {
-        id: 1,
-        firstName: 'John',
-        lastName: 'Doe',
-        dateOfBirth: new Date('1990-01-01'),
-        streetAddress: '123 Street',
-        city: 'City',
-        province: Province.Bali,
-        telephoneNumber: '1234567890',
-        email: 'test@example.com',
-        username: 'johndoe',
-        password: 'pass123',
-        registrationDate: new Date('1990-01-01'),
-        token: 'token123',
-      };
-
-      jest.spyOn(userService, 'findById').mockResolvedValue(user);
-      jest.spyOn(walletRepository, 'save').mockResolvedValueOnce({} as Wallet);
-
-      const wallet = await walletService.createWallet(user);
-
-      expect(wallet.address).toBeDefined();
-      expect(wallet.user).toBe(user);
-      expect(wallet.balance).toBe(0);
-      expect(walletRepository.save).toHaveBeenCalledWith(expect.any(Wallet));
-    });
   });
 
   describe('getWalletBalance', () => {
@@ -87,7 +58,7 @@ describe('WalletService', () => {
         address: 'wallet_address',
       };
 
-      jest.spyOn(userService, 'findById').mockResolvedValue(user);
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue(user);
       jest.spyOn(walletRepository, 'findOne').mockResolvedValue(wallet);
 
       const balance = await walletService.getWalletBalance(userId);
@@ -127,7 +98,7 @@ describe('WalletService', () => {
       const amount = 50;
       const updatedBalance = wallet.balance + amount;
 
-      jest.spyOn(userService, 'findById').mockResolvedValue(user);
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue(user);
       jest.spyOn(walletRepository, 'findOne').mockResolvedValue(wallet);
       jest.spyOn(walletRepository, 'update').mockResolvedValue({} as any);
 
@@ -167,7 +138,7 @@ describe('WalletService', () => {
       const amount = 50;
       const updatedBalance = wallet.balance - amount;
 
-      jest.spyOn(userService, 'findById').mockResolvedValue(user);
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue(user);
       jest.spyOn(walletRepository, 'findOne').mockResolvedValue(wallet);
       jest.spyOn(walletRepository, 'update').mockResolvedValue({} as any);
 
@@ -205,7 +176,7 @@ describe('WalletService', () => {
       };
       const amount = 50;
 
-      jest.spyOn(userService, 'findById').mockResolvedValue(user);
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue(user);
       jest.spyOn(walletRepository, 'findOne').mockResolvedValue(wallet);
 
       await expect(walletService.payWithWallet(userId, amount)).rejects.toThrow(
