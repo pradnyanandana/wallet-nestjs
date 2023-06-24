@@ -5,12 +5,15 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Wallet } from './wallet.entity';
 import { User } from '../user/user.entity';
+import { Response } from 'express';
+import { HttpStatus } from '@nestjs/common';
 
 describe('WalletController', () => {
   let controller: WalletController;
   let walletService: WalletService;
   let walletRepository: Repository<Wallet>;
   let userRepository: Repository<User>;
+  let response: Response;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,6 +30,11 @@ describe('WalletController', () => {
         },
       ],
     }).compile();
+
+    response = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as any;
 
     controller = module.get<WalletController>(WalletController);
     walletService = module.get<WalletService>(WalletService);

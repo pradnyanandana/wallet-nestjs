@@ -6,12 +6,15 @@ import { JwtService } from '@nestjs/jwt';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Auth } from './auth.entity';
 import { User } from '../user/user.entity';
+import { Response } from 'express';
+import { HttpStatus } from '@nestjs/common';
 
 describe('AuthController', () => {
   let controller: AuthController;
   let authService: AuthService;
   let authRepository: Repository<Auth>;
   let userRepository: Repository<User>;
+  let response: Response;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,6 +32,11 @@ describe('AuthController', () => {
         },
       ],
     }).compile();
+
+    response = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as any;
 
     controller = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
@@ -51,9 +59,13 @@ describe('AuthController', () => {
         .spyOn(authService, 'login')
         .mockResolvedValueOnce({ access_token: expectedToken });
 
-      const result = await controller.login(loginDto);
+      await controller.login(loginDto, response);
 
-      expect(result).toEqual({ access_token: expectedToken });
+      expect(response.status).toHaveBeenCalledWith(HttpStatus.OK);
+      expect(response.json).toHaveBeenCalledWith({
+        message: 'Success login',
+        data: { access_token: expectedToken },
+      });
       // expect(userRepository.findOne).toHaveBeenCalledWith({
       //   where: [
       //     { email: loginDto.emailOrUsername },
@@ -80,9 +92,14 @@ describe('AuthController', () => {
         .spyOn(authService, 'login')
         .mockRejectedValueOnce(new Error(errorMessage));
 
-      const result = await controller.login(loginDto);
+      await controller.login(loginDto, response);
 
-      expect(result).toEqual({ error: errorMessage });
+      expect(response.status).toHaveBeenCalledWith(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+      expect(response.json).toHaveBeenCalledWith({
+        message: errorMessage,
+      });
       // expect(userRepository.findOne).toHaveBeenCalledWith({
       //   where: [
       //     { email: loginDto.emailOrUsername },
