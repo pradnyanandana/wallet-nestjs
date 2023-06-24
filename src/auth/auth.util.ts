@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { User } from '../user/user.entity';
 
 const hashPassword = async (password: string): Promise<string> => {
@@ -10,7 +10,7 @@ const comparePassword = async (
   user: User,
   password: string,
 ): Promise<boolean> => {
-  return await bcrypt.compare(user.password, password);
+  return await bcrypt.compare(password, user.password);
 };
 
 export { hashPassword, comparePassword };

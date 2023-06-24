@@ -7,6 +7,8 @@ import {
   Length,
 } from 'class-validator';
 
+import { Type } from 'class-transformer';
+
 export enum Province {
   Aceh = 'Aceh',
   Bali = 'Bali',
@@ -54,6 +56,7 @@ export class CreateUserDto {
   lastName: string;
 
   @IsDate()
+  @Type(() => Date)
   dateOfBirth: Date;
 
   @IsString()

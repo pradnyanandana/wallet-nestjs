@@ -20,7 +20,7 @@ export class UserController {
       return {
         firstName: user.firstName,
         lastName: user.lastName,
-        dateOfBirth: user.dateOfBirth.toISOString(),
+        dateOfBirth: user.dateOfBirth,
         streetAddress: user.streetAddress,
         city: user.city,
         province: user.province,
