@@ -1,7 +1,6 @@
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { User } from './src/user/user.entity';
-import { Auth } from './src/auth/auth.entity';
 import { Wallet } from './src/wallet/wallet.entity';
 
 const configService = new ConfigService();
@@ -13,6 +12,6 @@ export default new DataSource({
   username: configService.get('DATABASE_USER'),
   password: configService.get('DATABASE_PASSWORD'),
   database: configService.get('DATABASE_NAME'),
-  entities: [User, Auth, Wallet],
+  entities: [User, Wallet],
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
 });

@@ -15,6 +15,7 @@ export class CreateUserTable1687601393483 implements MigrationInterface {
             email VARCHAR(255) NOT NULL UNIQUE,
             username VARCHAR(255) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
+            token VARCHAR(255) DEFAULT NULL,
             registrationDate TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6)
         )
     `);

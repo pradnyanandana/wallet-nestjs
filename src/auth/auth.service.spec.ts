@@ -4,7 +4,6 @@ import { AuthService } from './auth.service';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Auth } from './auth.entity';
 import { User } from '../user/user.entity';
 import { Response } from 'express';
 import { HttpStatus } from '@nestjs/common';
@@ -12,7 +11,6 @@ import { HttpStatus } from '@nestjs/common';
 describe('AuthController', () => {
   let controller: AuthController;
   let authService: AuthService;
-  let authRepository: Repository<Auth>;
   let userRepository: Repository<User>;
   let response: Response;
 
@@ -22,10 +20,6 @@ describe('AuthController', () => {
       providers: [
         AuthService,
         JwtService,
-        {
-          provide: getRepositoryToken(Auth),
-          useClass: Repository,
-        },
         {
           provide: getRepositoryToken(User),
           useClass: Repository,
@@ -40,7 +34,6 @@ describe('AuthController', () => {
 
     controller = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
-    authRepository = module.get<Repository<Auth>>(getRepositoryToken(Auth));
     userRepository = module.get<Repository<User>>(getRepositoryToken(User));
   });
 

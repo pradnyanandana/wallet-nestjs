@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { Auth } from './auth/auth.entity';
 import { AuthModule } from './auth/auth.module';
 import { User } from './user/user.entity';
 import { Wallet } from './wallet/wallet.entity';
@@ -26,7 +25,7 @@ import { WalletModule } from './wallet/wallet.module';
           password: cs.get('DATABASE_PASSWORD'),
           database: cs.get('DATABASE_NAME'),
           synchronize: true,
-          entities: [Auth, User, Wallet],
+          entities: [User, Wallet],
           autoLoadEntities: true,
         };
       },
