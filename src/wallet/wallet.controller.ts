@@ -22,6 +22,7 @@ import {
   ApiInternalServerErrorResponse,
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '../../middleware/http-exception.filter';
 
@@ -35,6 +36,7 @@ export class WalletController {
   @ApiOkResponse({ description: 'Successfully retrieved wallet balance' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @ApiUnauthorizedResponse({ description: 'Unauthorize' })
+  @ApiNotFoundResponse({ description: 'Not found wallet' })
   @Get('/balance')
   @UseGuards(JwtAuthGuard)
   @UseFilters(new HttpExceptionFilter())
@@ -52,6 +54,7 @@ export class WalletController {
   @ApiOkResponse({ description: 'Successfully topped up wallet' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @ApiUnauthorizedResponse({ description: 'Unauthorize' })
+  @ApiNotFoundResponse({ description: 'Not found wallet' })
   @Post('/top-up')
   @UseGuards(JwtAuthGuard)
   @UseFilters(new HttpExceptionFilter())
@@ -77,6 +80,7 @@ export class WalletController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @ApiUnauthorizedResponse({ description: 'Unauthorize' })
   @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiNotFoundResponse({ description: 'Not found wallet' })
   @Post('/pay')
   @UseGuards(JwtAuthGuard)
   @UseFilters(new HttpExceptionFilter())
