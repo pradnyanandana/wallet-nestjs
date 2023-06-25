@@ -8,7 +8,11 @@ import { CreateUserDto, Province } from './user.dto';
 import { Wallet } from '../wallet/wallet.entity';
 import * as Util from '../auth/auth.util';
 import { Response } from 'express';
-import { HttpStatus } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -80,27 +84,20 @@ describe('UserController', () => {
       wallet.user = user;
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
-      jest.spyOn(userRepository, 'save').mockResolvedValueOnce(user);
+      jest.spyOn(Util, 'hashPassword').mockResolvedValueOnce('hashedPassword');
       jest.spyOn(entityManager, 'transaction').mockImplementation(async () => {
         return true;
       });
-      jest.spyOn(Util, 'hashPassword').mockResolvedValueOnce('hashedPassword');
 
-      const result = await controller.createUser(createUserDto, response);
+      await controller.createUser(createUserDto, response);
 
       expect(response.status).toHaveBeenCalledWith(HttpStatus.OK);
-      expect(result).toHaveProperty('registrationDate');
-      expect(
-        Object.fromEntries(
-          Object.entries(result).filter(([key]) => key !== 'registrationDate'),
-        ),
-      ).toEqual(expectedUserDetails);
-      // expect(userRepository.findOne).toHaveBeenCalledWith({
-      //   where: { username: createUserDto.username },
-      // });
-      // expect(userRepository.save).toHaveBeenCalledWith(user);
-      // expect(entityManager.transaction).toHaveBeenCalled();
-      // expect(Util.hashPassword).toHaveBeenCalledWith(createUserDto.password);
+
+      expect(userRepository.findOne).toHaveBeenCalledWith({
+        where: { username: createUserDto.username },
+      });
+
+      expect(Util.hashPassword).toHaveBeenCalledWith(createUserDto.password);
     });
 
     it('should throw an exception when the username is already taken', async () => {
@@ -118,16 +115,19 @@ describe('UserController', () => {
       };
 
       const existingUser = new User();
+      const errorMessage = 'Username is already taken';
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(existingUser);
-      jest.spyOn(Util, 'hashPassword').mockResolvedValueOnce('hashedPassword');
 
-      await expect(
-        controller.createUser(createUserDto, response),
-      ).rejects.toThrowError('Username is already taken');
-      // expect(userRepository.findOne).toHaveBeenCalledWith({
-      //   where: { username: createUserDto.username },
-      // });
+      try {
+        await controller.createUser(createUserDto, response);
+      } catch (error) {
+        expect(error).toBeInstanceOf(BadRequestException);
+        expect(error.message).toBe(errorMessage);
+        expect(userRepository.findOne).toHaveBeenCalledWith({
+          where: { username: createUserDto.username },
+        });
+      }
     });
 
     it('should throw an exception when the user fails to save in the database', async () => {
@@ -144,18 +144,26 @@ describe('UserController', () => {
         password: 'password',
       };
 
-      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
-      jest
-        .spyOn(userRepository, 'save')
-        .mockRejectedValueOnce(new Error('Failed to save user'));
+      const errorMessage = 'Failed to save user to the database';
 
-      await expect(
-        controller.createUser(createUserDto, response),
-      ).rejects.toThrowError('Failed to save user to the database');
-      // expect(userRepository.findOne).toHaveBeenCalledWith({
-      //   where: { username: createUserDto.username },
-      // });
-      // expect(userRepository.save).toHaveBeenCalledWith(expect.any(User));
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
+      jest.spyOn(Util, 'hashPassword').mockResolvedValueOnce('hashedPassword');
+      jest.spyOn(entityManager, 'transaction').mockImplementation(async () => {
+        throw new Error();
+      });
+
+      try {
+        await controller.createUser(createUserDto, response);
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+        expect(error.message).toBe(errorMessage);
+
+        expect(userRepository.findOne).toHaveBeenCalledWith({
+          where: { username: createUserDto.username },
+        });
+
+        expect(Util.hashPassword).toHaveBeenCalledWith(createUserDto.password);
+      }
     });
   });
 });

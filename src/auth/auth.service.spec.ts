@@ -11,7 +11,6 @@ import * as Util from './auth.util';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let authService: AuthService;
   let userRepository: Repository<User>;
   let response: Response;
   let jwtService: JwtService;
@@ -35,7 +34,6 @@ describe('AuthController', () => {
     } as any;
 
     controller = module.get<AuthController>(AuthController);
-    authService = module.get<AuthService>(AuthService);
     userRepository = module.get<Repository<User>>(getRepositoryToken(User));
     jwtService = module.get<JwtService>(JwtService);
   });
@@ -58,7 +56,7 @@ describe('AuthController', () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(user);
       jest.spyOn(Util, 'comparePassword').mockResolvedValueOnce(true);
       jest.spyOn(jwtService, 'sign').mockReturnValue(expectedToken);
-      jest.spyOn(userRepository, 'save').mockResolvedValueOnce(user);
+      jest.spyOn(userRepository, 'save').mockResolvedValueOnce(userSave);
 
       await controller.login(loginDto, response);
 
@@ -100,6 +98,12 @@ describe('AuthController', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(UnauthorizedException);
         expect(error.message).toBe(errorMessage);
+        expect(userRepository.findOne).toHaveBeenCalledWith({
+          where: [
+            { email: loginDto.emailOrUsername },
+            { username: loginDto.emailOrUsername },
+          ],
+        });
       }
     });
 

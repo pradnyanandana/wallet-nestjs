@@ -15,6 +15,7 @@ import {
   ApiOperation,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '../../middleware/http-exception.filter';
 
@@ -26,6 +27,7 @@ export class UserController {
   @ApiOperation({ summary: 'Create a new user' })
   @ApiOkResponse({ description: 'Successfully created user' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @Post()
   @UseFilters(new HttpExceptionFilter())
   async createUser(
