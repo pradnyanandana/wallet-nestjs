@@ -94,13 +94,16 @@ describe('UserController', () => {
       expect(response.status).toHaveBeenCalledWith(HttpStatus.OK);
 
       expect(userRepository.findOne).toHaveBeenCalledWith({
-        where: { username: createUserDto.username },
+        where: [
+          { username: createUserDto.username },
+          { email: createUserDto.email },
+        ],
       });
 
       expect(Util.hashPassword).toHaveBeenCalledWith(createUserDto.password);
     });
 
-    it('should throw an exception when the username is already taken', async () => {
+    it('should throw an exception when the username or email is already taken', async () => {
       const createUserDto: CreateUserDto = {
         firstName: 'John',
         lastName: 'Doe',
@@ -115,7 +118,7 @@ describe('UserController', () => {
       };
 
       const existingUser = new User();
-      const errorMessage = 'Username is already taken';
+      const errorMessage = 'Username / email is already taken';
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(existingUser);
 
@@ -125,7 +128,10 @@ describe('UserController', () => {
         expect(error).toBeInstanceOf(BadRequestException);
         expect(error.message).toBe(errorMessage);
         expect(userRepository.findOne).toHaveBeenCalledWith({
-          where: { username: createUserDto.username },
+          where: [
+            { username: createUserDto.username },
+            { email: createUserDto.email },
+          ],
         });
       }
     });
@@ -159,7 +165,10 @@ describe('UserController', () => {
         expect(error.message).toBe(errorMessage);
 
         expect(userRepository.findOne).toHaveBeenCalledWith({
-          where: { username: createUserDto.username },
+          where: [
+            { username: createUserDto.username },
+            { email: createUserDto.email },
+          ],
         });
 
         expect(Util.hashPassword).toHaveBeenCalledWith(createUserDto.password);

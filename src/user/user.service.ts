@@ -32,11 +32,11 @@ export class UserService {
 
     // Check if username is unique
     const existingUser = await this.userRepository.findOne({
-      where: { username },
+      where: [{ username }, { email }],
     });
 
     if (existingUser) {
-      throw new BadRequestException('Username is already taken');
+      throw new BadRequestException('Username / email is already taken');
     }
 
     const user = new User();
