@@ -20,7 +20,7 @@ export class AuthService {
     });
 
     if (!user || !(await comparePassword(user, password))) {
-      throw new Error('Invalid email/username or password');
+      throw new UnauthorizedException('Invalid email/username or password');
     }
 
     const payload = { sub: user.id };

@@ -5,6 +5,7 @@ import {
   ValidationPipe,
   HttpStatus,
   Res,
+  UseFilters,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './auth.dto';
@@ -12,9 +13,11 @@ import { Response } from 'express';
 import {
   ApiTags,
   ApiOperation,
-  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiUnauthorizedResponse,
+  ApiOkResponse,
 } from '@nestjs/swagger';
+import { HttpExceptionFilter } from '../../middleware/http-exception.filter';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -22,25 +25,21 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: 'User login' })
-  @ApiCreatedResponse({ description: 'Successfully logged in' })
+  @ApiOkResponse({ description: 'Successfully logged in' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiUnauthorizedResponse({ description: 'Invalid username/password' })
   @Post('login')
+  @UseFilters(new HttpExceptionFilter())
   async login(
     @Body(new ValidationPipe()) loginDto: LoginDto,
     @Res() res: Response,
   ) {
-    try {
-      const { emailOrUsername, password } = loginDto;
-      const token = await this.authService.login(emailOrUsername, password);
+    const { emailOrUsername, password } = loginDto;
+    const token = await this.authService.login(emailOrUsername, password);
 
-      res.status(HttpStatus.OK).json({
-        message: 'Success login',
-        data: token,
-      });
-    } catch (error) {
-      res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ message: error.message });
-    }
+    res.status(HttpStatus.OK).json({
+      message: 'Success login',
+      data: token,
+    });
   }
 }

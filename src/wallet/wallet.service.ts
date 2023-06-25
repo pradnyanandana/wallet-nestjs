@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Wallet } from './wallet.entity';
@@ -52,7 +52,7 @@ export class WalletService {
     });
 
     if (wallet.balance < amount) {
-      throw new Error('Insufficient balance');
+      throw new BadRequestException('Insufficient balance');
     }
 
     wallet.balance -= amount;
