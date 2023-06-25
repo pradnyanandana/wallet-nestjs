@@ -161,7 +161,17 @@ document.addEventListener('DOMContentLoaded', () => {
     actionEncrypt.addEventListener('click', function () {
       var value = monacoEditorEncrypt.getValue();
       var publicKey = addressPlaceholder.innerHTML;
-      var decryptedValue = encryptData(value, publicKey);
+      var encryptedValue = encryptData(value, publicKey);
+
+      monacoEditorDecrypt.setValue(encryptedValue);
+    });
+
+    actionDecrypt.addEventListener('click', function () {
+      var value = monacoEditorDecrypt.getValue();
+      var publicKey = addressPlaceholder.innerHTML;
+      var decryptedValue = decryptData(value, publicKey);
+
+      monacoEditorEncrypt.setValue(decryptedValue);
     });
   } else {
     alert('Metamask is not installed or not available');
