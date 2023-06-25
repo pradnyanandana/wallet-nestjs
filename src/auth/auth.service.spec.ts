@@ -6,13 +6,15 @@ import { JwtService } from '@nestjs/jwt';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
 import { Response } from 'express';
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, UnauthorizedException } from '@nestjs/common';
+import * as Util from './auth.util';
 
 describe('AuthController', () => {
   let controller: AuthController;
   let authService: AuthService;
   let userRepository: Repository<User>;
   let response: Response;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,6 +37,7 @@ describe('AuthController', () => {
     controller = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
     userRepository = module.get<Repository<User>>(getRepositoryToken(User));
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   describe('login', () => {
@@ -43,14 +46,19 @@ describe('AuthController', () => {
         emailOrUsername: 'test@example.com',
         password: 'password',
       };
+
       const user = new User();
       user.id = 1;
+
       const expectedToken = 'fake_token';
 
+      const userSave = user;
+      userSave.token = expectedToken;
+
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(user);
-      jest
-        .spyOn(authService, 'login')
-        .mockResolvedValueOnce({ access_token: expectedToken });
+      jest.spyOn(Util, 'comparePassword').mockResolvedValueOnce(true);
+      jest.spyOn(jwtService, 'sign').mockReturnValue(expectedToken);
+      jest.spyOn(userRepository, 'save').mockResolvedValueOnce(user);
 
       await controller.login(loginDto, response);
 
@@ -59,16 +67,40 @@ describe('AuthController', () => {
         message: 'Success login',
         data: { access_token: expectedToken },
       });
-      // expect(userRepository.findOne).toHaveBeenCalledWith({
-      //   where: [
-      //     { email: loginDto.emailOrUsername },
-      //     { username: loginDto.emailOrUsername },
-      //   ],
-      // });
-      expect(authService.login).toHaveBeenCalledWith(
-        loginDto.emailOrUsername,
+
+      expect(userRepository.findOne).toHaveBeenCalledWith({
+        where: [
+          { email: loginDto.emailOrUsername },
+          { username: loginDto.emailOrUsername },
+        ],
+      });
+
+      expect(Util.comparePassword).toHaveBeenCalledWith(
+        user,
         loginDto.password,
       );
+
+      expect(jwtService.sign).toHaveBeenCalledWith({ sub: user.id });
+      expect(userRepository.save).toHaveBeenCalledWith(userSave);
+    });
+
+    it('should return an error message when user is not found', async () => {
+      const loginDto = {
+        emailOrUsername: 'test@example.com',
+        password: 'password',
+      };
+      const user = new User();
+      user.id = 1;
+      const errorMessage = 'Invalid email/username or password';
+
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
+
+      try {
+        await controller.login(loginDto, response);
+      } catch (error) {
+        expect(error).toBeInstanceOf(UnauthorizedException);
+        expect(error.message).toBe(errorMessage);
+      }
     });
 
     it('should return an error message when login fails', async () => {
@@ -81,28 +113,26 @@ describe('AuthController', () => {
       const errorMessage = 'Invalid email/username or password';
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(user);
-      jest
-        .spyOn(authService, 'login')
-        .mockRejectedValueOnce(new Error(errorMessage));
+      jest.spyOn(Util, 'comparePassword').mockResolvedValueOnce(false);
 
-      await controller.login(loginDto, response);
+      try {
+        await controller.login(loginDto, response);
+      } catch (error) {
+        expect(error).toBeInstanceOf(UnauthorizedException);
+        expect(error.message).toBe(errorMessage);
 
-      expect(response.status).toHaveBeenCalledWith(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-      expect(response.json).toHaveBeenCalledWith({
-        message: errorMessage,
-      });
-      // expect(userRepository.findOne).toHaveBeenCalledWith({
-      //   where: [
-      //     { email: loginDto.emailOrUsername },
-      //     { username: loginDto.emailOrUsername },
-      //   ],
-      // });
-      expect(authService.login).toHaveBeenCalledWith(
-        loginDto.emailOrUsername,
-        loginDto.password,
-      );
+        expect(userRepository.findOne).toHaveBeenCalledWith({
+          where: [
+            { email: loginDto.emailOrUsername },
+            { username: loginDto.emailOrUsername },
+          ],
+        });
+
+        expect(Util.comparePassword).toHaveBeenCalledWith(
+          user,
+          loginDto.password,
+        );
+      }
     });
   });
 });
