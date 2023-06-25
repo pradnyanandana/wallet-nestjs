@@ -3,9 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <title>Encrypt Data</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.1/web3.min.js"></script>
-    <script src="/js/encrypt.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
     <style>
       body {
         font-family: 'Slabo 27px', serif;
@@ -20,7 +19,7 @@
         justify-content: center;
       }
 
-      * {
+      .container > *:not(#editor) {
         text-align: center;
       }
 
@@ -40,6 +39,21 @@
       button.connect {
         display: none;
       }
+
+      .actions {
+        display: none;
+        align-items: center;
+        gap: 20px;
+        margin-top: 40px;
+      }
+
+      #editor {
+        color: white;
+        height: 400px;
+        width: 100%;
+        max-width: 768px;
+        border: 1px solid black;
+      }
     </style>
   </head>
   <body>
@@ -47,6 +61,15 @@
       <h1>ENCRYPT FILE</h1>
       <h2>My Account: <span id="account-address"></span></h2>
       <button class="connect">Connect</button>
+      <div id="editor"></div>
+      <div class="actions">
+        <button class="encrypt">Encrypt</button>
+        <button class="decrypt">Decrypt</button>
+      </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.1/web3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.26.1/min/vs/loader.min.js"></script>
+    <script src="/js/encrypt.js"></script>
   </body>
 </html>
