@@ -5,6 +5,8 @@ export class AppController {
   @Get()
   @Render('index')
   root() {
-    return { script: 'http://localhost:3000/encrypt.js' };
+    return {
+      encryptAPI: 'http://localhost:3000/eth/encrypt',
+    };
   }
 }

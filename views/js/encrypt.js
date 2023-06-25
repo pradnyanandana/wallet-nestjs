@@ -48,8 +48,26 @@ document.addEventListener('DOMContentLoaded', () => {
           method: 'eth_getEncryptionPublicKey',
           params: [address],
         })
-        .then((result) => {
-          console.log(result);
+        .then(function (publicKey) {
+          fetch(encryptAPI, {
+            method: 'POST',
+            body: JSON.stringify({ publicKey, message: decryptedMessage }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then(function (res) {
+              return res.json();
+            })
+            .then(function (data) {
+              monacoEditorDecrypt.setValue(data.data);
+            })
+            .catch(function (error) {
+              alert(error.message);
+            });
+        })
+        .catch(function (error) {
+          alert(error.message);
         });
     });
 
@@ -62,10 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
           method: 'eth_decrypt',
           params: [encryptedMessage, address],
         })
-        .then((decryptedMessage) => {
+        .then(function (decryptedMessage) {
           monacoEditorEncrypt.setValue(decryptedMessage);
         })
-        .catch((error) => {
+        .catch(function (error) {
           alert(error.message);
         });
     });
