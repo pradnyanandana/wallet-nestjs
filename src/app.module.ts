@@ -9,6 +9,8 @@ import { User } from './user/user.entity';
 import { Wallet } from './wallet/wallet.entity';
 import { UserModule } from './user/user.module';
 import { WalletModule } from './wallet/wallet.module';
+import { EthController } from './eth/eth.controller';
+import { EthModule } from './eth/eth.module';
 
 @Module({
   imports: [
@@ -33,6 +35,7 @@ import { WalletModule } from './wallet/wallet.module';
     AuthModule,
     UserModule,
     WalletModule,
+    EthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

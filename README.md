@@ -16,9 +16,15 @@ The system design of the Wallet System includes the following components:
 
 - **Flowchart Diagram**: Represents the flow of operations in the system, including user registration, login, and wallet management.
 
+<table>
+  <tr>
+    <td><img src="https://user-images.githubusercontent.com/29228978/201361284-f7b58aa7-c902-4868-b28a-4aed21e5a2d6.png"></td>
+  </tr>
+</table>
+
 - **Database ER Diagram**: Illustrates the entity-relationship model of the database, showing the relationships between entities such as users, wallets, and transactions.
 
-- **UML Sequence Diagram**: (Bonus) Presents the sequence of interactions between different system components during user registration, login, and wallet operations.
+- **UML Sequence Diagram**: Presents the sequence of interactions between different system components during user registration, login, and wallet operations.
 
 ## Technologies Used
 
