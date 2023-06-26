@@ -18,13 +18,13 @@ The system design of the Wallet System includes the following components:
 
 <table>
   <tr>
-    <td><img src="https://user-images.githubusercontent.com/29228978/201361284-f7b58aa7-c902-4868-b28a-4aed21e5a2d6.png"></td>
+    <td><img src="https://github.com/pradnyanandana/assets/assets/29228978/2b04ab53-a879-4a83-b8ac-ce2b5b1bac50"></td>
   </tr>
   <tr>
-    <td><img src="https://user-images.githubusercontent.com/29228978/201361284-f7b58aa7-c902-4868-b28a-4aed21e5a2d6.png"></td>
+    <td><img src=""></td>
   </tr>
   <tr>
-    <td><img src="https://user-images.githubusercontent.com/29228978/201361284-f7b58aa7-c902-4868-b28a-4aed21e5a2d6.png"></td>
+    <td><img src=""></td>
   </tr>
 </table>
 
