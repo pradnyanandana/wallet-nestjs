@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  if (typeof window.ethereum !== 'undefined') {
-    var monacoEditorEncrypt, monacoEditorDecrypt;
-    var addressPlaceholder = document.querySelector('#account-address');
-    var connectButton = document.querySelector('button.connect');
-    var actions = document.querySelector('.actions');
-    var actionEncrypt = actions.querySelector('button.encrypt');
-    var actionDecrypt = actions.querySelector('button.decrypt');
+  var monacoEditorEncrypt, monacoEditorDecrypt;
+  var addressPlaceholder = document.querySelector('#account-address');
+  var connectButton = document.querySelector('button.connect');
+  var editorWrapper = document.querySelector('.editor-wrapper');
+  var actions = document.querySelector('.actions');
+  var actionEncrypt = actions.querySelector('button.encrypt');
+  var actionDecrypt = actions.querySelector('button.decrypt');
 
+  if (typeof window.ethereum !== 'undefined') {
     addressPlaceholder.innerHTML = 'loading...';
 
     web3 = new Web3(window.web3.currentProvider);
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!accounts[0]) {
         connectButton.setAttribute('style', 'display:block');
       } else {
-        actions.setAttribute('style', 'display:flex');
+        editorWrapper.setAttribute('style', 'display:block');
       }
     });
 
