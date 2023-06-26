@@ -18,16 +18,30 @@ The system design of the Wallet System includes the following components:
 
 <table>
   <tr>
-    <td><img src="https://github.com/pradnyanandana/assets/assets/29228978/2b04ab53-a879-4a83-b8ac-ce2b5b1bac50"></td>
-    <td><img src="https://github.com/pradnyanandana/assets/assets/29228978/b521e47c-3d3f-4667-b2ff-861894720110"></td>
-    <td><img src="https://github.com/pradnyanandana/assets/assets/29228978/c20de251-f882-44c5-9c4e-b9ebcbb0f20a"></td>
+    <td><img src="https://img001.prntscr.com/file/img001/Y_Kfy3wAQv2A35FpWNjWtg.jpeg"></td>
+    <td><img src="https://img001.prntscr.com/file/img001/VMsGwuenSI-S_6azpx2C3Q.jpeg"></td>
+    <td><img src="https://img001.prntscr.com/file/img001/ACDAScxoQHe5MSBLNe7-og.jpeg"></td>
   </tr>
 </table>
 
 
-- **Database ER Diagram**: Illustrates the entity-relationship model of the database, showing the relationships between entities such as users, wallets, and transactions.
+- **Database ER Diagram**: Illustrates the entity-relationship model of the database, showing the relationships between entities such as users and wallets.
+
+<table>
+  <tr>
+    <td><img src="https://img001.prntscr.com/file/img001/z1LccOiTQqO_SapO1NJ7lw.jpg"></td>
+  </tr>
+</table>
 
 - **UML Sequence Diagram**: Presents the sequence of interactions between different system components during user registration, login, and wallet operations.
+
+<table>
+  <tr>
+    <td><img src="https://img001.prntscr.com/file/img001/aGC9UZQsS1G5VT9IAsE3Ag.jpeg"></td>
+    <td><img src="https://img001.prntscr.com/file/img001/3Bf1mny4TH2xodjtxnWTLw.jpeg"></td>
+    <td><img src="https://img001.prntscr.com/file/img001/j_I0crAYS6al2k2kYttSgA.jpeg"></td>
+  </tr>
+</table>
 
 ## Technologies Used
 
@@ -53,9 +67,11 @@ The Wallet System is developed using the following technologies:
 
 3. Set up the environment variables by creating a `.env` file and copying the contents from `env.example`. Update the values as required.
 
-4. Run the application using the provided scripts in the `package.json` file, such as `npm run start:dev` for development mode.
+4. Run the application using the provided scripts in the `package.json` file, such as `npm start`. Please make sure the MySQL service is running.
 
-5. Access the application through the specified server endpoint.
+5. API documentation is provided through this link: [http://localhost:3000/api](http://localhost:3000/api).
+
+Once the dependencies and environment variables are set up, you can execute the tests by running the command npm `run test`. This command will trigger the test suite and display the results in the console.
 
 ## Environment Setup
 
@@ -93,6 +109,16 @@ npm run typeorm:run-migration
 
 This command will execute the migrations defined in the project and update the database schema accordingly.
 
-Note: Make sure your MySQL database server is running and the database credentials provided in the .env file are correct. Also, ensure that the database specified in the .env file (DATABASE_NAME=wallet) exists in your MySQL server.
+Note: Make sure your MySQL database server is running and the database credentials provided in the .env file are correct. Also, ensure that the database specified in the .env file (DATABASE_NAME=yourdb) exists in your MySQL server.
 
-By running the migration command, TypeORM will automatically create the necessary tables and relationships based on the defined entities and migrations in your project.
+By running the migration command, TypeORM will automatically create the necessary tables and relationships based on the defined entities and migrations in the project.
+
+## Additional Information
+
+This project also includes some web3 tasks, as follows:
+
+1. **Screenshot of MetaMask Ethereum Wallet:** The screenshot of the MetaMask Ethereum wallet can be found in the file named `/web3/ethereum-wallet-metamask.png`.
+
+2. **Content Encryptor and Decryptor:** You can access the content encryptor and decryptor through the following link: [http://localhost:3000](http://localhost:3000). This tool enables you to encrypt and decrypt content using your MetaMask address and private key.
+
+3. **Simple Smart Contract in Solidity:** The simple smart contract written in Solidity can be found in the file named `/web3/Counter.sol`. This contract implements the desired functionality, including a counter variable, a constructor to initialize the counter, a function to increment the counter, and a function to retrieve the current counter value.
