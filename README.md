@@ -8,19 +8,26 @@ The Wallet System is a web application that allows users to register, login, and
 
 2. **Login**: Users can log in to their accounts using their email/username and password. The login process verifies the credentials and returns the user's login data without the password. Single Sign-On (SSO) is implemented to expire old devices when the user logs in from multiple devices.
 
-3. **Wallet**: Each registered user is assigned a unique wallet address encrypted in SHA256. Users can check their wallet balance, top up their wallet balance, and make payments using their wallet balance. The wallet APIs are secured with authentication methods to ensure the security of the wallet transactions.
+3. **Wallet**: Each registered user is assigned a unique wallet address encrypted in SHA256. Users can check their wallet balance, top up it, and make payments using it. The wallet APIs are secured with authentication methods to ensure the security of the wallet transactions.
 
 ## System Design
 
 The system design of the Wallet System includes the following components:
 
-- **Flowchart Diagram**: Represents the flow of operations in the system, including user registration, login, and wallet management.
+- **Flowchart Diagram**: This represents the flow of operations in the system, including user registration, login, and wallet management.
 
 <table>
   <tr>
     <td><img src="https://user-images.githubusercontent.com/29228978/201361284-f7b58aa7-c902-4868-b28a-4aed21e5a2d6.png"></td>
   </tr>
+  <tr>
+    <td><img src="https://user-images.githubusercontent.com/29228978/201361284-f7b58aa7-c902-4868-b28a-4aed21e5a2d6.png"></td>
+  </tr>
+  <tr>
+    <td><img src="https://user-images.githubusercontent.com/29228978/201361284-f7b58aa7-c902-4868-b28a-4aed21e5a2d6.png"></td>
+  </tr>
 </table>
+
 
 - **Database ER Diagram**: Illustrates the entity-relationship model of the database, showing the relationships between entities such as users, wallets, and transactions.
 
@@ -30,17 +37,17 @@ The system design of the Wallet System includes the following components:
 
 The Wallet System is developed using the following technologies:
 
-- **Node.js**: Provides the runtime environment for executing JavaScript code on the server-side.
+- **Node.js**: Provides the runtime environment for executing JavaScript code on the server side.
 
 - **NestJS**: A framework for building efficient and scalable server-side applications using TypeScript.
 
-- **MySQL**: A popular relational database management system used for storing user data, wallet information, and transaction records.
+- **MySQL**: A popular relational database management system for storing user data, wallet information, and transaction records.
 
 - **JWT (JSON Web Token)**: Used for user authentication and generating secure tokens for registration and login.
 
 - **Passport.js**: A middleware for Node.js that provides authentication strategies, including local and JWT-based authentication.
 
-- **TypeORM**: An Object-Relational Mapping (ORM) library that simplifies database operations and enables seamless interaction with the MySQL database.
+- **TypeORM**: An Object-Relational Mapping (ORM) library simplifies database operations and enables seamless interaction with the MySQL database.
 
 ## Installation and Usage
 
@@ -54,7 +61,7 @@ The Wallet System is developed using the following technologies:
 
 5. Access the application through the specified server endpoint.
 
-## Environtment Setup
+## Environment Setup
 
 To set up the environment for the Wallet System application, follow these steps:
 
@@ -78,7 +85,7 @@ DATABASE_NAME=
 
 5. Save the `.env` file.
 
-The application will automatically read the environment variables from the `.env` file when it starts up. Make sure to restart the application if it was already running for the changes to take effect.
+The application will automatically read the environment variables from the `.env` file when it starts up. Make sure to restart the application if it is already running for the changes to take effect.
 
 ## Migration
 
